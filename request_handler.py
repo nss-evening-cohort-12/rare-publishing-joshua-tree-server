@@ -1,2 +1,2 @@
 def main():
-    print('Test!')
+    print('something')
