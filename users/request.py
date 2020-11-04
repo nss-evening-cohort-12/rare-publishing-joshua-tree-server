@@ -3,7 +3,7 @@ import json
 from models.user import User
 
 
-def get_users_by_email(email):
+def get_users_by_email(email, password):
 
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -19,17 +19,19 @@ def get_users_by_email(email):
               u.email,
               u.password
           from Users u
-          where u.email = ?
-        """, ( email, ))
+          where u.email = ? AND u.password = ?
+        """, ( email, password))
 
         users = []
-        dataset = db_cursor.fetchall()
+        row = db_cursor.fetchone()
+        user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
+        users.append(user.__dict__)
 
-        for row in dataset:
-            user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
-            users.append(user.__dict__)
-
-    return json.dumps(users)
+        #print("getting email and pass")
+        flag = True
+        user = user.__dict__
+        user['valid'] = True
+    return json.dumps(user)
 
 def create_user(new_user):
     with sqlite3.connect("./rare.db") as conn:
@@ -53,6 +55,7 @@ def create_user(new_user):
         # was sent by the client so that the client sees the
         # primary key in the response.
         new_user['id'] = id
+        new_user['valid'] = True
 
 
     return json.dumps(new_user)    
