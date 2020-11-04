@@ -71,4 +71,4 @@ INSERT INTO `Post_Tags` VALUES (null, 2, 4);
 INSERT INTO `Comments` VALUES (null, 3, 2, 'Football', 'Great article, thanks!', 11/01/2020);
 INSERT INTO `Comments` VALUES (null, 1, 1, 'Cats', "I've owned three of the breeds you wrote about, and I agree that they make great pets!", 10/25/2020);
 
-SELECT * FROM Posts
+SELECT * FROM Users
