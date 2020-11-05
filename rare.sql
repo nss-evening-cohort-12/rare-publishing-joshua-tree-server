@@ -3,7 +3,8 @@ CREATE TABLE `Users` (
   `first_name` VARCHAR(30) NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
   `display_name` VARCHAR(20) NOT NULL,
-  `email` VARCHAR(30) NOT NULL
+  `email` VARCHAR(30) NOT NULL,
+  `password` VARCHAR(12) NOT NULL
 );
 
 CREATE TABLE `Categories` (
@@ -47,9 +48,9 @@ CREATE TABLE `Comments` (
   FOREIGN KEY(`post_id`) REFERENCES `Posts`(`id`)
 );
 
-INSERT INTO `Users` VALUES (null, 'Bob', 'Smith', 'TitansFan2020', 'bobsmith@aol.com');
-INSERT INTO `Users` VALUES (null, 'Kate', 'Johnson', 'ILoveCats', 'katejohnson2@yahoo.com');
-INSERT INTO `Users` VALUES (null, 'Alex', 'Page', 'PythonR00lz', 'alexpage@gmail.com');
+INSERT INTO `Users` VALUES (null, 'Bob', 'Smith', 'TitansFan2020', 'bobsmith@aol.com', 'password');
+INSERT INTO `Users` VALUES (null, 'Kate', 'Johnson', 'ILoveCats', 'katejohnson2@yahoo.com', 'password');
+INSERT INTO `Users` VALUES (null, 'Alex', 'Page', 'PythonR00lz', 'alexpage@gmail.com', 'password');
 
 INSERT INTO `Categories` VALUES (null, 'Sports');
 INSERT INTO `Categories` VALUES (null, 'Technology');
@@ -72,3 +73,13 @@ INSERT INTO `Comments` VALUES (null, 3, 2, 'Football', 'Great article, thanks!',
 INSERT INTO `Comments` VALUES (null, 1, 1, 'Cats', "I've owned three of the breeds you wrote about, and I agree that they make great pets!", 10/25/2020);
 
 SELECT * FROM Users
+SELECT * FROM Posts
+
+
+-- TRUNCATE TABLE Comments;
+drop TABLE Comments
+drop table Tags
+drop TABLE Post_Tags
+DROP TABLE Posts
+DROP TABLE Categories
+DROP TABLE Users
