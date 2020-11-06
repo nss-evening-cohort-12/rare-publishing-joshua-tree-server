@@ -80,9 +80,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == 'login':
             new_object = get_users_by_email(post_body['username'], post_body['password'])
             #new_object['valid'] = True
-        elif resource == 'new-post':
+        elif resource == 'post':
             new_object = create_post(post_body)
-        elif resource == 'new-tag':
+        elif resource == 'tag':
             new_object = create_tag(post_body)
 
         self.wfile.write(f"{new_object}".encode())
