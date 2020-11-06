@@ -4,6 +4,7 @@ import json
 from users import get_users_by_email, create_user, get_all_users
 from posts import create_post, get_all_posts
 from tags import create_tag, get_all_tags
+from categories import create_category, get_all_categories
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -55,6 +56,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_tags()}"
 
+            elif resource == 'categories':
+                if id is not None:
+                    pass
+                else:
+                    response = f"{get_all_categories()}"
+
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
 
@@ -84,6 +91,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_object = create_post(post_body)
         elif resource == 'new-tag':
             new_object = create_tag(post_body)
+        elif resource == 'categories':
+            new_category = None
+            new_category = create_category(post_body)
+            self.wfile.write(f"{new_category}".encode())
 
         self.wfile.write(f"{new_object}".encode())
 
