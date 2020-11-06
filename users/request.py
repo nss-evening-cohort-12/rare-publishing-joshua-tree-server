@@ -22,15 +22,21 @@ def get_users_by_email(email, password):
           where u.email = ? AND u.password = ?
         """, ( email, password))
 
-        users = []
+        #users = []
+        user = {}
         row = db_cursor.fetchone()
-        user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
-        users.append(user.__dict__)
+        if row == None:
+            user['valid'] = False
+            #user = user.__dict__
+        else:
+            user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
+            user = user.__dict__
+            user['valid'] = True
+
+        #user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
+        #users.append(user.__dict__)
 
         #print("getting email and pass")
-        flag = True
-        user = user.__dict__
-        user['valid'] = True
     return json.dumps(user)
 
 def create_user(new_user):
