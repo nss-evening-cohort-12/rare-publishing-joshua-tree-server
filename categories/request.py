@@ -32,6 +32,26 @@ def get_all_categories():
     return json.dumps(categories)
 
 
+def get_single_category(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.category_name
+        FROM categories c
+        WHERE c.id = ?
+        """, ( id, ))
+
+        data = db_cursor.fetchone()
+
+        category = Category(data['id'], data['category_name'])
+
+        return json.dumps(category.__dict__)
+
+
 def create_category(new_category):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
