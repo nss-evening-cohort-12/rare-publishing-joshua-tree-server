@@ -1,7 +1,9 @@
-
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from users import get_users_by_email, create_user, get_all_users
 import json
+
+from users import get_users_by_email, create_user, get_all_users
+from posts import create_post, get_all_posts
+from tags import create_tag, get_all_tags
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -37,9 +39,22 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
             if resource == 'users':
                 if id is not None:
-                    pass # Need a get_single_tag mehtod
+                    pass
                 else:
                     response = f"{get_all_users()}"
+
+            elif resource == 'posts':
+                if id is not None:
+                    pass
+                else:
+                    response = f"{get_all_posts()}"
+
+            elif resource == 'tags':
+                if id is not None:
+                    pass
+                else:
+                    response = f"{get_all_tags()}"
+
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
 
@@ -55,14 +70,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
+
         (resource, id) = self.parse_url(self.path)
         new_object = None
-        # I had to change the user to register to can be register from the FronEnd Clint side
+
+        # I had to change the user to register to can be register from the FrontEnd Client side
         if resource == 'register':
             new_object = create_user(post_body)
         elif resource == 'login':
             new_object = get_users_by_email(post_body['username'], post_body['password'])
             #new_object['valid'] = True
+        elif resource == 'new-post':
+            new_object = create_post(post_body)
+        elif resource == 'new-tag':
+            new_object = create_tag(post_body)
+
         self.wfile.write(f"{new_object}".encode())
 
     def do_OPTIONS(self):
@@ -76,5 +98,6 @@ def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
+
 if __name__ == "__main__":
     main()
