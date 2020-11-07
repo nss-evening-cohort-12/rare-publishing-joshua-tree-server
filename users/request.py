@@ -23,15 +23,17 @@ def get_users_by_email(email, password):
         """, ( email, password))
 
         #users = []
-        user = {}
+        #user = {}
         row = db_cursor.fetchone()
         if row == None:
+            user = {}
             user['valid'] = False
             #user = user.__dict__
         else:
             user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
             user = user.__dict__
             user['valid'] = True
+            user['token'] = row['id']
 
         #user = User(row['id'], row['first_name'], row['last_name'],row['display_name'], row['email'] , row['password'])
         #users.append(user.__dict__)
