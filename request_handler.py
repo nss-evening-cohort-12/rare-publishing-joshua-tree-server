@@ -4,7 +4,7 @@ import json
 from users import get_users_by_email, create_user, get_all_users
 from posts import create_post, get_all_posts
 from tags import create_tag, get_all_tags
-from categories import create_category, get_all_categories
+from categories import create_category, get_all_categories, get_single_category, delete_category
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -58,7 +58,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             elif resource == 'categories':
                 if id is not None:
-                    pass
+                    response = f"{get_single_category(id)}"
                 else:
                     response = f"{get_all_categories()}"
 
@@ -97,6 +97,16 @@ class HandleRequests(BaseHTTPRequestHandler):
             self.wfile.write(f"{new_category}".encode())
 
         self.wfile.write(f"{new_object}".encode())
+
+    def do_DELETE(self):
+        self._set_headers(204)
+
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "categories":
+            delete_category(id)
+            
+        self.wfile.write("".encode())
 
     def do_OPTIONS(self):
         self.send_response(200)
