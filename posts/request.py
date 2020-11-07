@@ -53,10 +53,8 @@ def get_single_post(id):
             p.category_id,
             p.publication_date,
             p.image_url,
-            u.display_name user_display_name,
-            u.first_name user_first_name,
-            u.last_name user_last_name,
-            c.category_name post_category_name
+            u.display_name display_name,
+            c.category_name category_name
         FROM Posts p
         JOIN Users u
             ON u.id = p.user_id
@@ -67,13 +65,11 @@ def get_single_post(id):
 
         data = db_cursor.fetchone()
         post = Post(data['id'], data['user_id'], data['title'], data['content'], data['category_id'], data['publication_date'], data['image_url'])
-        user = User(data['id'], data['user_first_name'], data['user_last_name'], data['user_display_name'])
-        category = Category(data['id'], data['post_category_name'])
+        post = post.__dict__
+        post['author'] = data['display_name']
+        post['category_name'] = data['category_name']
 
-        post.user = user.__dict__
-        post.category = category.__dict__
-
-    return json.dumps(post.__dict__)
+    return json.dumps(post)
 
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
