@@ -87,9 +87,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == 'login':
             new_object = get_users_by_email(post_body['username'], post_body['password'])
             #new_object['valid'] = True
-        elif resource == 'new-post':
+        elif resource == 'posts':
             new_object = create_post(post_body)
-        elif resource == 'new-tag':
+        elif resource == 'tags':
             new_object = create_tag(post_body)
         elif resource == 'categories':
             new_category = None
