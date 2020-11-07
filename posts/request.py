@@ -19,8 +19,12 @@ def get_all_posts():
             p.content,
             p.category_id,
             p.publication_date,
-            p.image_url
-        FROM Posts p
+            p.image_url,
+            c.category_name,
+            u.first_name || ' ' || u.last_name AS full_name
+        FROM Posts as p
+        JOIN Users as u ON p.user_id = u.id
+        JOIN Categories as c ON p.category_id = c.id
         """)
 
         posts = []
@@ -28,7 +32,10 @@ def get_all_posts():
 
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['title'], row['content'], row['category_id'], row['publication_date'], row['image_url'])
-            posts.append(post.__dict__)
+            post = post.__dict__
+            post['full_name'] = row['full_name']
+            post['category_name'] = row['category_name']
+            posts.append(post)
 
     return json.dumps(posts)
 
