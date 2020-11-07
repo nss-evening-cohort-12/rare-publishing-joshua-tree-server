@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from users import get_users_by_email, create_user, get_all_users
-from posts import create_post, get_all_posts
+from posts import create_post, get_all_posts, get_single_post
 from tags import create_tag, get_all_tags
 from categories import create_category, get_all_categories
 
@@ -46,7 +46,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             elif resource == 'posts':
                 if id is not None:
-                    pass
+                    response = f"{get_single_post(id)}"
                 else:
                     response = f"{get_all_posts()}"
 
