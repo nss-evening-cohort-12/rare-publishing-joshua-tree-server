@@ -4,7 +4,7 @@ import json
 from users import get_users_by_email, create_user, get_all_users
 from posts import create_post, get_all_posts
 from tags import create_tag, get_all_tags
-from categories import create_category, get_all_categories, get_single_category, delete_category
+from categories import create_category, get_all_categories, get_single_category, delete_category, update_category
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -106,6 +106,26 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "categories":
             delete_category(id)
             
+        self.wfile.write("".encode())
+
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "categories":
+            success = update_category(id, post_body)
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
     def do_OPTIONS(self):
