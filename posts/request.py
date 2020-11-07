@@ -30,6 +30,10 @@ def get_all_posts():
 
     return json.dumps(posts)
 
+def get_single_post(id):
+    with sqlite3.connect('./rare.db') as conn:
+        
+
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
