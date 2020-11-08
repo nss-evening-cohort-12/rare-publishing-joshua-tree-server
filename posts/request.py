@@ -3,8 +3,7 @@ import json
 from datetime import datetime
 
 from models.post import Post
-from models.user import User
-from models.category import Category
+from models.tag import Tag
 
 def get_all_posts():
     with sqlite3.connect('./rare.db') as conn:
@@ -69,12 +68,34 @@ def get_single_post(id):
         post['author'] = data['display_name']
         post['category_name'] = data['category_name']
 
+        db_cursor.execute("""
+        SELECT
+            t.id,
+            t.name,
+            pt.id,
+            pt.post_id,
+            pt.tag_id
+        FROM Post_Tags pt
+        JOIN Tags t
+            ON t.id = pt.tag_id
+        WHERE pt.post_id = ?
+        """, (post['id'], ))
+
+        tags = []
+        tagset = db_cursor.fetchall()
+
+        for one_tag in tagset:
+            tag = Tag(one_tag['id'], one_tag['name'])
+            tags.append(tag.__dict__)
+
+        post['tags'] = tags
+
     return json.dumps(post)
 
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        date_now = datetime.now().strftime("%d/%m/%Y")
 
         db_cursor.execute(f"""
         INSERT INTO Posts
