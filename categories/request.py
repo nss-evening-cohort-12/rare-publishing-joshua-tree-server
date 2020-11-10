@@ -78,3 +78,25 @@ def delete_category(id):
         DELETE FROM categories
         WHERE id = ?
         """, (id, ))
+
+def update_category(id, new_category):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Categories
+            SET
+                category_name = ?
+        WHERE id = ?
+        """, (new_category['category_name'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
