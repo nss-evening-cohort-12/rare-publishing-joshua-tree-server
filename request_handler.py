@@ -126,7 +126,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "categories":
             success = update_category(id, post_body)
-        elif resource == 'edit-tag':
+        elif resource == 'tags':
             success = update_tag(id, post_body)
 
         if success:
