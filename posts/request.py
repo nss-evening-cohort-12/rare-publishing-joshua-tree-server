@@ -3,8 +3,7 @@ import json
 from datetime import datetime
 
 from models.post import Post
-from models.user import User
-from models.category import Category
+from models.tag import Tag
 
 def get_all_posts():
     with sqlite3.connect('./rare.db') as conn:
@@ -53,10 +52,8 @@ def get_single_post(id):
             p.category_id,
             p.publication_date,
             p.image_url,
-            u.display_name user_display_name,
-            u.first_name user_first_name,
-            u.last_name user_last_name,
-            c.category_name post_category_name
+            u.display_name display_name,
+            c.category_name category_name
         FROM Posts p
         JOIN Users u
             ON u.id = p.user_id
@@ -67,18 +64,38 @@ def get_single_post(id):
 
         data = db_cursor.fetchone()
         post = Post(data['id'], data['user_id'], data['title'], data['content'], data['category_id'], data['publication_date'], data['image_url'])
-        user = User(data['id'], data['user_first_name'], data['user_last_name'], data['user_display_name'])
-        category = Category(data['id'], data['post_category_name'])
+        post = post.__dict__
+        post['author'] = data['display_name']
+        post['category_name'] = data['category_name']
 
-        post.user = user.__dict__
-        post.category = category.__dict__
+        db_cursor.execute("""
+        SELECT
+            t.id,
+            t.name,
+            pt.id,
+            pt.post_id,
+            pt.tag_id
+        FROM Post_Tags pt
+        JOIN Tags t
+            ON t.id = pt.tag_id
+        WHERE pt.post_id = ?
+        """, (post['id'], ))
 
-    return json.dumps(post.__dict__)
+        tags = []
+        tagset = db_cursor.fetchall()
+
+        for one_tag in tagset:
+            tag = Tag(one_tag['id'], one_tag['name'])
+            tags.append(tag.__dict__)
+
+        post['tags'] = tags
+
+    return json.dumps(post)
 
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        date_now = datetime.now().strftime("%d/%m/%Y")
 
         db_cursor.execute(f"""
         INSERT INTO Posts
