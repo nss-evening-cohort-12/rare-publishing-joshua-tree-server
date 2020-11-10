@@ -2,9 +2,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from users import get_users_by_email, create_user, get_all_users
-from posts import create_post, get_all_posts
-from tags import create_tag, get_all_tags
 from categories import create_category, get_all_categories, get_single_category, delete_category, update_category
+from tags import create_tag, get_all_tags, get_single_tag, delete_tag
+from posts import create_post, get_all_posts, get_single_post, get_all_posts_user
+from post_tags import create_post_tag
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -46,13 +47,13 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             elif resource == 'posts':
                 if id is not None:
-                    pass
+                    response = f"{get_single_post(id)}"
                 else:
                     response = f"{get_all_posts()}"
 
             elif resource == 'tags':
                 if id is not None:
-                    pass
+                    response = f"{get_single_tag(id)}"
                 else:
                     response = f"{get_all_tags()}"
 
@@ -70,6 +71,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             # email as a filtering value?
             if key == "email" and resource == "login":
                 response = get_users_by_email(value)
+            elif key == "user_id" and resource == "posts":
+                response = get_all_posts_user(value)
         self.wfile.write(response.encode())        
 
     def do_POST(self):
@@ -91,6 +94,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_object = create_post(post_body)
         elif resource == 'tags':
             new_object = create_tag(post_body)
+        elif resource == 'post-tags':
+            new_object = create_post_tag(post_body)
         elif resource == 'categories':
             new_category = None
             new_category = create_category(post_body)
@@ -105,6 +110,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "categories":
             delete_category(id)
+        elif resource == 'tags':
+            delete_tag(id)
             
         self.wfile.write("".encode())
 
