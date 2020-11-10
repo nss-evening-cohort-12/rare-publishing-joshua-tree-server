@@ -2,8 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from users import get_users_by_email, create_user, get_all_users
+from tags import create_tag, get_all_tags, get_single_tag, delete_tag
 from posts import create_post, get_all_posts, get_single_post, get_all_posts_user
-from tags import create_tag, get_all_tags, get_single_tag
 from categories import create_category, get_all_categories, get_single_category, delete_category
 from post_tags import create_post_tag
 
@@ -110,6 +110,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "categories":
             delete_category(id)
+        elif resource == 'tags':
+            delete_tag(id)
             
         self.wfile.write("".encode())
 
