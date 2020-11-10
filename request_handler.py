@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from users import get_users_by_email, create_user, get_all_users
-from tags import create_tag, get_all_tags, get_single_tag, delete_tag
+from tags import create_tag, get_all_tags, get_single_tag, delete_tag, update_tag
 from posts import create_post, get_all_posts, get_single_post, get_all_posts_user
 from categories import create_category, get_all_categories, get_single_category, delete_category
 from post_tags import create_post_tag
@@ -113,6 +113,25 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == 'tags':
             delete_tag(id)
             
+        self.wfile.write("".encode())
+
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == 'edit-tag':
+            success = update_tag(id, post_body)
+        
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
     def do_OPTIONS(self):
