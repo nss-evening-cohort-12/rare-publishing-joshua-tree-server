@@ -139,3 +139,12 @@ def get_all_posts_user(id):
             posts.append(post)
 
     return json.dumps(posts)
+
+def delete_post(id):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Posts
+        WHERE id = ?
+        """, (id, ))
