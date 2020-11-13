@@ -24,6 +24,7 @@ def get_all_posts():
         FROM Posts as p
         JOIN Users as u ON p.user_id = u.id
         JOIN Categories as c ON p.category_id = c.id
+        ORDER BY p.publication_date DESC
         """)
 
         posts = []
@@ -31,7 +32,12 @@ def get_all_posts():
 
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['title'], row['content'], row['category_id'], row['publication_date'], row['image_url'])
+            db_cursor.execute("""
+            select COUNT(post_id) as total_C from Comments WHERE post_id = ?
+            """, (row['id'], ))            
             post = post.__dict__
+            total_comments = db_cursor.fetchone()
+            post['total_comments'] = total_comments['total_C']            
             post['full_name'] = row['full_name']
             post['category_name'] = row['category_name']
             posts.append(post)
@@ -64,7 +70,12 @@ def get_single_post(id):
 
         data = db_cursor.fetchone()
         post = Post(data['id'], data['user_id'], data['title'], data['content'], data['category_id'], data['publication_date'], data['image_url'])
+        db_cursor.execute("""
+        select COUNT(post_id) as total_C from Comments WHERE post_id = ?
+        """, (data['id'], ))
         post = post.__dict__
+        total_comments = db_cursor.fetchone()
+        post['total_comments'] = total_comments['total_C']
         post['author'] = data['display_name']
         post['category_name'] = data['category_name']
 
@@ -95,7 +106,7 @@ def get_single_post(id):
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%d/%m/%Y")
+        date_now = datetime.now().strftime("%m/%d/%Y")
 
         db_cursor.execute(f"""
         INSERT INTO Posts
@@ -126,6 +137,7 @@ def get_all_posts_user(id):
         JOIN Users as u ON p.user_id = u.id
         JOIN Categories as c ON p.category_id = c.id
         WHERE p.user_id = ?
+        ORDER BY p.publication_date DESC
         """, (id, ))
 
         posts = []
