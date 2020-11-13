@@ -6,6 +6,7 @@ from tags import create_tag, get_all_tags, get_single_tag, delete_tag, update_ta
 from categories import create_category, get_all_categories, get_single_category, delete_category, update_category
 from posts import create_post, get_all_posts, get_single_post, get_all_posts_user, delete_post
 from post_tags import create_post_tag
+from comments import get_all_comments_post, create_comment
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -62,6 +63,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_category(id)}"
                 else:
                     response = f"{get_all_categories()}"
+                    
+            elif resource == 'comments':
+                if id is not None:
+                    response = f"{get_all_comments_post(id)}"
+                else:
+                    response = f"{get_all_categories()}"                        
 
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
@@ -100,6 +107,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_category = None
             new_category = create_category(post_body)
             self.wfile.write(f"{new_category}".encode())
+        elif resource == 'comments':            
+            new_object = create_post_tag(post_body)            
 
         self.wfile.write(f"{new_object}".encode())
 
