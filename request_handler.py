@@ -1,10 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+
 from users import get_users_by_email, create_user, get_all_users
 from tags import create_tag, get_all_tags, get_single_tag, delete_tag, update_tag
 from categories import create_category, get_all_categories, get_single_category, delete_category, update_category
-from posts import create_post, get_all_posts, get_single_post, get_all_posts_user, delete_post
+from posts import create_post, get_all_posts, get_single_post, get_all_posts_user, delete_post, update_post
 from post_tags import create_post_tag
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -130,6 +131,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_category(id, post_body)
         elif resource == 'tags':
             success = update_tag(id, post_body)
+        elif resource == 'posts':
+            success = update_post(id, post_body)
 
         if success:
             self._set_headers(204)
