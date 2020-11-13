@@ -5,7 +5,7 @@ from users import get_users_by_email, create_user, get_all_users
 from tags import create_tag, get_all_tags, get_single_tag, delete_tag, update_tag
 from categories import create_category, get_all_categories, get_single_category, delete_category, update_category
 from posts import create_post, get_all_posts, get_single_post, get_all_posts_user
-from post_tags import create_post_tag
+from post_tags import create_post_tag, delete_post_tags
 
 class HandleRequests(BaseHTTPRequestHandler):
     def parse_url(self, path):
@@ -112,6 +112,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_category(id)
         elif resource == 'tags':
             delete_tag(id)
+        elif resource == 'posts':
+            delete_post_tags(id)
             
         self.wfile.write("".encode())
 
