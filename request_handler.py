@@ -108,7 +108,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_category = create_category(post_body)
             self.wfile.write(f"{new_category}".encode())
         elif resource == 'comments':            
-            new_object = create_post_tag(post_body)            
+            new_object = create_comment(post_body)            
 
         self.wfile.write(f"{new_object}".encode())
 
