@@ -123,6 +123,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_tag(id)
         elif resource == 'posts':
             delete_post(id)
+        elif resource == 'post-tags':
             delete_post_tags(id)
             
         self.wfile.write("".encode())
