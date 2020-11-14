@@ -95,7 +95,7 @@ def get_single_post(id):
 def create_post(new_post):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%d/%m/%Y")
+        date_now = datetime.now().strftime("%m/%d/%Y")
 
         db_cursor.execute(f"""
         INSERT INTO Posts
