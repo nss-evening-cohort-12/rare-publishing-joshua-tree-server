@@ -45,7 +45,7 @@ def get_all_comments_post(id):
 def create_comment(new_comment):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%m/%d/%Y")
+        date_now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
         db_cursor.execute(f"""
         INSERT INTO Comments
