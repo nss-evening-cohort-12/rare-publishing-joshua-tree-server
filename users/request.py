@@ -86,6 +86,7 @@ def get_all_users():
             u.email,
             u.password
         FROM users u
+        ORDER BY display_name ASC
         """)
 
         # Initialize an empty list to hold all animal representations
