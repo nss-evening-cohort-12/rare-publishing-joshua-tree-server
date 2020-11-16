@@ -45,7 +45,7 @@ def get_all_comments_post(id):
 def create_comment(new_comment):
     with sqlite3.connect('./rare.db') as conn:
         db_cursor = conn.cursor()
-        date_now = datetime.now().strftime("%m/%d/%Y")
+        date_now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
         db_cursor.execute(f"""
         INSERT INTO Comments
@@ -55,3 +55,12 @@ def create_comment(new_comment):
         """, (new_comment['user_id'], new_comment['post_id'], new_comment['subject'], new_comment['content'], date_now, ))
 
     return json.dumps(new_comment)    
+
+def delete_comment(id):
+    with sqlite3.connect('./rare.db') as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Comments
+        WHERE id = ?
+        """, (id ,))
